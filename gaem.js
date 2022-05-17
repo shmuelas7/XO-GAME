@@ -26,6 +26,7 @@ for (i = 0; i < num; i++) {
       if (count % 2 == 0) {
         e.target.innerHTML = "X";
         list[i][j] = "X";
+
         checkList("X", list);
       } else {
         e.target.innerHTML = "O";
@@ -39,9 +40,14 @@ for (i = 0; i < num; i++) {
   }
   board.appendChild(div);
 }
+
 function chec(list, ch) {
   return list.every((v) => v === ch);
 }
+
+let lis = ["", "", ""];
+let listSlantR = [];
+let listSlantL = ["", "", ""];
 function checkList(check, list) {
   //   debugger;
   for (let i = 0; i < num; i++) {
@@ -49,10 +55,21 @@ function checkList(check, list) {
       alert("win");
       return;
     }
-    let lis = [];
     for (let j = 0; j < num; j++) {
       lis[j] = list[j][i];
-      console.log(list);
+      if (i == j) {
+        listSlantR[i] = list[i][j];
+      }
+      if (i == num - 1 - j) {
+        listSlantL[i] = list[i][j];
+      }
+      if (chec(lis, check)) {
+        console.log("win");
+      } else if (chec(listSlantR, check)) {
+        console.log("win");
+      } else if (chec(listSlantL, check)) {
+        console.log("win");
+      }
     }
   }
 }
