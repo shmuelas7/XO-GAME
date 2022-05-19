@@ -1,3 +1,10 @@
 .cel{
     border:black solid 3px
 }
+/* .col-2{
+
+    width:auto;
+} */
+#board{
+    text-align: center;
+}
