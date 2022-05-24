@@ -1,10 +1,24 @@
-.cel{
-    border:black solid 3px
-}
-/* .col-2{
-
-    width:auto;
-} */
-#board{
+body {
+    
     text-align: center;
 }
+.cel{
+    border:black solid 3px;
+    width: 100px;
+    height: 100px;
+}
+
+/* #board{
+    display: grid;
+    justify-content: center;
+    text-align: center;
+} */
+#seconds {
+    font-size: 3em;}
+  
+  #minutes {
+    font-size: 3em;
+  }
+  #colon {
+    font-size: 3em;
+  }
