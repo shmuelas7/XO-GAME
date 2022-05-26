@@ -1,24 +1,25 @@
 let boardSize = 3;
-let reset = document.getElementById("reset");
-let newGame = document.getElementById("newGame");
-// let entnum = document.getElementById("num");
-let start = document.getElementById("start");
+// let reset = document.getElementById("reset");
+const board = document.getElementById("board");
 let player1 = null;
 let player2 = null;
 let gameHistory = [];
+let Turn = true;
+let win = false;
+let list = [];
 
-newGame.onclick = () => {
-	localStorage.setItem("FirstPlayer", countX);
-	localStorage.setItem("SecndPlayer", countY);
-	document.location.reload(true);
-	win = false;
-};
+let x, y;
 
-reset.onclick = () => {
-	localStorage.clear();
-	document.location.reload(true);
-};
+let winer = [,];
 
+let lis = ["", "", ""];
+let listSlantR = [];
+let listSlantL = ["", "", ""];
+// let countX = localStorage.getItem("FirstPlayer");
+// let countY = localStorage.getItem("SecndPlayer");
+
+// let entnum = document.getElementById("num");
+// let start = document.getElementById("start");
 // entnum.onchange = (e) => {
 // 	boardSize = Number(e.target.value);
 // };
@@ -26,63 +27,65 @@ reset.onclick = () => {
 // start.onclick = () => {};
 
 // let s =
-let countX = localStorage.getItem("FirstPlayer");
-let countY = localStorage.getItem("SecndPlayer");
 
-let list = [];
-for (let i = 0; i < boardSize; i++) {
-	list[i] = [];
-	for (let j = 0; j < boardSize; j++) {
-		list[i][j] = " ";
+function createMarix() {
+	for (let i = 0; i < boardSize; i++) {
+		list[i] = [];
+		for (let j = 0; j < boardSize; j++) {
+			list[i][j] = " ";
+		}
 	}
 }
 
-let count = 0;
-let x, y;
-let win = false;
-let winer = [,];
+function newGame() {
+	localStorage.setItem("FirstPlayer", countX);
+	localStorage.setItem("SecndPlayer", countY);
+	document.location.reload(true);
+	win = false;
+}
 
-const board = document.getElementById("board");
+function reset() {
+	localStorage.clear();
+	document.location.reload(true);
+}
 
 function createBoard() {
-	let div = document.createElement("div");
-	div.className = "col-3";
-	board.appendChild(div);
-
 	for (i = 0; i < boardSize; i++) {
 		let div = document.createElement("div");
+		div.className = "row";
 
 		for (j = 0; j < boardSize; j++) {
 			let col = document.createElement("div");
 			col.className = "col-2 cel";
 			col.style.backgroundColor = "red";
-			col.innerHTML = "a";
+
 			col.id = JSON.stringify({ i, j });
 			col.onclick = (e) => {
-				if (win) console.log("win");
+				// if (win) console.log("win");
 
 				if (e.target.innerHTML != "X" && e.target.innerHTML != "O" && !win) {
-					console.log(countX);
-					console.log(countY);
+					// console.log(countX);
+					// console.log(countY);
 					const { i, j } = JSON.parse(e.target.id);
 
-					if (count % 2 == 0) {
-						e.target.innerHTML = "X";
+					if (Turn) {
+						e.target.innerText = "X";
 						list[i][j] = "X";
-						checkList("X", list);
-						if (win) countX++;
-					} else {
-						e.target.innerHTML = "O";
-						list[i][j] = "O";
-						checkList("O", list);
-						if (win) countY++;
-					}
+						Turn = false;
+						checkList("X");
 
-					count++;
+						// if (win) countX++;
+					} else {
+						e.target.innerText = "O";
+						list[i][j] = "O";
+						Turn = true;
+						checkList("O");
+
+						// if (win) countY++;
+					}
 				}
 			};
 			div.appendChild(col);
-			div.className = "row";
 		}
 		board.appendChild(div);
 	}
@@ -94,11 +97,7 @@ function chec(list, ch) {
 	}
 }
 
-let lis = ["", "", ""];
-let listSlantR = [];
-let listSlantL = ["", "", ""];
-
-function checkList(check, list) {
+function checkList(check) {
 	for (let i = 0; i < boardSize; i++) {
 		chec(list[i], check);
 
@@ -143,9 +142,13 @@ async function startGame() {
 			player2 = new CreatePlayer(b);
 		},
 	});
+
 	putName();
+	createMarix();
+	createNav();
 	createBoard();
 }
+
 function putName() {
 	let header = document.getElementById("header");
 	let blank = document.createElement("div");
@@ -157,7 +160,7 @@ function putName() {
 	let label1 = document.createElement("label");
 	let label2 = document.createElement("label");
 
-	blank.className = "col-3 col-sm-0";
+	blank.className = "col-3 ";
 
 	name1.className = "text-center";
 	name2.className = "text-center";
@@ -170,9 +173,9 @@ function putName() {
 	div2.className = "col-3";
 	div2.appendChild(name2);
 
-	timer.className = "text-center";
+	timer.className = "text-center col-3";
 
-	header.append(timer, div1, div2);
+	header.append(timer, div1, div2, blank);
 	startTimer();
 }
 
@@ -216,8 +219,67 @@ function startTimer() {
 function updateSize() {
 	let range = document.getElementById("range");
 	let count = document.getElementById("size");
+	let center = document.getElementById("center");
+
 	boardSize = range.value;
 	count.innerHTML = boardSize;
+}
+function createNav() {
+	let nav = document.getElementById("nav");
+	let undoDiv = document.createElement("div");
+	let undoImg = document.createElement("img");
+
+	let reloadDiv = document.createElement("div");
+	let reloadBtn = document.createElement("button");
+
+	let saveDiv = document.createElement("div");
+	let saveImg = document.createElement("img");
+
+	let newGameDiv = document.createElement("div");
+	let newGamebtn = document.createElement("button");
+
+	newGameDiv.className = "col-2";
+	newGamebtn.innerHTML = "new Game";
+	newGamebtn.onclick = () => {
+		newGame();
+	};
+	newGameDiv.appendChild(newGamebtn);
+
+	undoDiv.className = "col-2";
+	undoImg.src = "./undo.png";
+	undoImg.className = "undo";
+	undoDiv.appendChild(undoImg);
+	undoImg.onclick = () => {
+		pushHistory();
+	};
+
+	saveDiv.className = "col-2";
+	saveImg.src = "./save.png";
+	saveImg.className = "save";
+	saveImg.onclick = () => {
+		save();
+	};
+	saveDiv.appendChild(saveImg);
+
+	reloadDiv.className = "col-2";
+	reloadBtn.innerText = "reload game";
+	reloadBtn.onclick = () => {
+		load();
+	};
+	reloadDiv.appendChild(reloadBtn);
+
+	nav.append(undoDiv, saveDiv, reloadDiv, newGameDiv);
+}
+
+function pushHistory() {}
+function save() {
+	localStorage.savedGame = JSON.stringify(list);
+	alert("The Game Saved");
+}
+function load() {
+	if (localStorage.savedGame) {
+		list = JSON.parse(localStorage.savedGame);
+	}
 }
 
 startGame();

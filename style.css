@@ -4,7 +4,7 @@ body {
 }
 .cel{
     border:black solid 3px;
-    width: 100px;
+    width: 20%;
     height: 100px;
 }
 
@@ -14,11 +14,18 @@ body {
     text-align: center;
 } */
 #seconds {
-    font-size: 3em;}
+    font-size: 2em;}
   
   #minutes {
-    font-size: 3em;
+    font-size: 2em;
   }
   #colon {
-    font-size: 3em;
+    font-size: 2em;
+  }
+  .undo{
+      width: 100%;
+  }
+  .save{
+      width: 100%;
+      
   }
