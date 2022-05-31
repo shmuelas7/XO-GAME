@@ -52,7 +52,9 @@ function createBoard() {
 					const { i, j } = JSON.parse(e.target.id);
 
 					if (Turn) {
+						e.target.className = "col-2 cel ";
 						e.target.innerText = "X";
+
 						list[i][j] = "X";
 						Turn = false;
 						checkList("X");
@@ -60,6 +62,7 @@ function createBoard() {
 						// if (win) countX++;
 					} else {
 						e.target.innerText = "O";
+						e.target.className = "col-2 cel ";
 						list[i][j] = "O";
 						Turn = true;
 						checkList("O");
@@ -209,43 +212,45 @@ function updateSize() {
 	count.innerHTML = boardSize;
 }
 function createNav() {
+	let size = boardSize == 3 ? 2 : 3;
 	let nav = document.getElementById("nav");
+
 	let undoDiv = document.createElement("div");
-	let undoImg = document.createElement("img");
+	let undoImg = document.createElement("button");
 
 	let reloadDiv = document.createElement("div");
 	let reloadBtn = document.createElement("button");
 
 	let saveDiv = document.createElement("div");
-	let saveImg = document.createElement("img");
+	let saveImg = document.createElement("button");
 
 	let newGameDiv = document.createElement("div");
 	let newGamebtn = document.createElement("button");
 
-	newGameDiv.className = "col-2";
+	newGameDiv.className = `col-${size} txt`;
 	newGamebtn.innerHTML = "new Game";
 	newGamebtn.onclick = () => {
 		newGame();
 	};
 	newGameDiv.appendChild(newGamebtn);
 
-	undoDiv.className = "col-2";
-	undoImg.src = "./undo.png";
+	undoDiv.className = `col-${size} txt`;
 	undoImg.className = "undo";
+	undoImg.innerText = "step back";
 	undoDiv.appendChild(undoImg);
 	undoImg.onclick = () => {
 		undo();
 	};
 
-	saveDiv.className = "col-2";
-	saveImg.src = "./save.png";
+	saveDiv.className = `col-${size} txt`;
+	saveImg.innerText = "save game";
 	saveImg.className = "save";
 	saveImg.onclick = () => {
 		save();
 	};
 	saveDiv.appendChild(saveImg);
 
-	reloadDiv.className = "col-2";
+	reloadDiv.className = `col-${size} txt`;
 	reloadBtn.innerText = "reload game";
 	reloadBtn.onclick = () => {
 		load();
