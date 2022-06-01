@@ -9,7 +9,7 @@ body {
 }
 .cel{
     border:black solid 3px;
-    width: 20%;
+    
     height: 100px;
     cursor: pointer;
 }
@@ -36,7 +36,7 @@ body {
   } */
 
   .txt{
-      font-size: small;
+      font-size:small ;
   }
 
 
