@@ -54,13 +54,17 @@ function createBoard() {
 					const { i, j } = JSON.parse(e.target.id);
 
 					if (Turn == "X") {
-						e.target.className = "col-2 cel ";
+						player1.count++;
+						e.target.className = "col-2 cel x ";
 						e.target.innerText = "X";
+						e.target.style.backgroundImage = "url('./x.jpg' )";
 						list[i][j] = "X";
 						checkList("X");
 					} else {
+						player2.count++;
 						e.target.innerText = "O";
-						e.target.className = "col-2 cel ";
+						e.target.style.backgroundImage = "url('./o.jpg' )";
+						e.target.className = "col-2 cel  x text-black";
 						list[i][j] = "O";
 						checkList("O");
 					}
@@ -102,9 +106,9 @@ function checkList(check) {
 	chec(listSlantL, check);
 }
 
-function CreatePlayer(name) {
+function CreatePlayer(name, count = 1) {
 	this.name = name;
-	count = 0;
+	this.count = count;
 }
 
 async function startGame() {
@@ -209,6 +213,7 @@ function updateSize() {
 	let centerDiv = document.getElementById("centerDiv");
 
 	boardSize = range.value;
+	board.className = `size${boardSize} col-4 text-center game `;
 	count.innerHTML = boardSize;
 	if (boardSize > 3) {
 		center.className = "col-4";
@@ -216,7 +221,7 @@ function updateSize() {
 	}
 }
 function createNav() {
-	let size = boardSize == 3 ? 2 : 3;
+	let size = 2;
 	let nav = document.getElementById("nav");
 
 	let undoDiv = document.createElement("div");
@@ -231,8 +236,19 @@ function createNav() {
 	let newGameDiv = document.createElement("div");
 	let newGamebtn = document.createElement("button");
 
+	let bestScorediv = document.createElement("div");
+	let bestScorebtn = document.createElement("button");
+
+	bestScorediv.className = `col-lg-${size} txt col-sm-12 mt-2 `;
+	bestScorebtn.className = " size btn btn-primary";
+	bestScorebtn.innerText = "best score";
+	bestScorebtn.onclick = () => {
+		showBestScore();
+	};
+	bestScorediv.appendChild(bestScorebtn);
+
 	newGameDiv.className = `col-lg-${size} txt col-sm-12 mt-2 `;
-	newGamebtn.className = "btn btn-primary";
+	newGamebtn.className = " size btn btn-primary";
 	newGamebtn.innerHTML = "new Game";
 	newGamebtn.onclick = () => {
 		newGame();
@@ -240,30 +256,30 @@ function createNav() {
 	newGameDiv.appendChild(newGamebtn);
 
 	undoDiv.className = `col-lg-${size} txt col-sm-12 mt-2`;
-	undoImg.className = "undo btn btn-primary";
+	undoImg.className = "size btn btn-primary";
 	undoImg.innerText = "step back";
 	undoDiv.appendChild(undoImg);
 	undoImg.onclick = () => {
 		undo();
 	};
 
-	saveDiv.className = `col-lg-${size} txt col-sm-12 mt-2`;
+	saveDiv.className = `col-lg-${size} txt col-sm-12 mt-2 `;
 	saveImg.innerText = "save game";
-	saveImg.className = "save btn btn-primary";
+	saveImg.className = "size btn btn-primary";
 	saveImg.onclick = () => {
 		save();
 	};
 	saveDiv.appendChild(saveImg);
 
-	reloadDiv.className = `col-lg-${size} txt  col-sm-12 mt-2`;
+	reloadDiv.className = `col-lg-${size} txt  col-sm-12 mt-2 `;
 	reloadBtn.innerText = "reload game";
-	reloadBtn.className = "btn btn-primary";
+	reloadBtn.className = "btn btn-primary size";
 	reloadBtn.onclick = () => {
 		load();
 	};
 	reloadDiv.appendChild(reloadBtn);
 
-	nav.append(undoDiv, saveDiv, reloadDiv, newGameDiv);
+	nav.append(undoDiv, saveDiv, reloadDiv, newGameDiv, bestScorediv);
 }
 
 function pushHistory() {
@@ -288,14 +304,16 @@ async function undo() {
 		eraseBoard();
 		flagErase = true;
 		createBoard();
-		changeTurn();
+		let player = changeTurn();
+		player.count--;
 	}
 }
-function winerr() {
+async function winerr() {
 	clearInterval(intervalId);
-	let winName = Turn == "X" ? player2.name : player1.name;
-	Swal.fire({
-		title: winName + " WINER !!! ",
+	let winName = Turn == "X" ? player2 : player1;
+
+	await Swal.fire({
+		title: winName.name + " WINER !!! ",
 		showClass: {
 			popup: "animate__animated animate__fadeInDown",
 		},
@@ -303,6 +321,7 @@ function winerr() {
 			popup: "animate__animated animate__fadeOutUp",
 		},
 	});
+	saveBestScore(winName);
 }
 function changeTurn() {
 	let player1 = document.getElementById("p1");
@@ -311,10 +330,12 @@ function changeTurn() {
 		Turn = "O";
 		player2.className = "bg-black col-3 rounded-pill";
 		player1.className = "col-3";
+		return player1;
 	} else {
 		Turn = "X";
 		player1.className = "bg-black col-3 rounded-pill";
 		player2.className = "col-3 ";
+		return player2;
 	}
 }
 function signBoard(col) {
@@ -323,6 +344,25 @@ function signBoard(col) {
 	} else if (list[i][j] == "O") {
 		col.innerText = "O";
 	}
+}
+function saveBestScore(player) {
+	let name = `bestScore${boardSize}`;
+
+	console.log(localStorage[name]);
+	if (localStorage[name] === undefined) {
+		localStorage[name] = player.count;
+		console.log(localStorage[name]);
+	} else {
+		console.log(localStorage[name] + "" + player.count);
+		if (player.count < localStorage[name]) {
+			localStorage[name] = player.count;
+			console.log("sucss");
+		}
+	}
+}
+function showBestScore() {
+	let name = `bestScore${boardSize}`;
+	console.log(localStorage[name]);
 }
 
 startGame();
