@@ -12,6 +12,7 @@ let listSlantR = [];
 let listSlantL = ["", "", ""];
 let flagErase = false;
 let intervalId = null;
+let flagUndo = null;
 
 function createMarix() {
 	for (let i = 0; i < boardSize; i++) {
@@ -52,6 +53,7 @@ function createBoard() {
 					// console.log(countX);
 					// console.log(countY);
 					const { i, j } = JSON.parse(e.target.id);
+					flagUndo = true;
 
 					if (Turn == "X") {
 						player1.count++;
@@ -153,12 +155,12 @@ function putName() {
 	name1.className = "text-center";
 	name2.className = "text-center";
 
-	name1.innerText = player1.name + "=> X";
+	name1.innerText = player1.name + " => X";
 	div1.className = "col-3 bg-dark rounded-pill";
 	div1.id = "p1";
 	div1.appendChild(name1);
 
-	name2.innerText = player2.name + "=> O";
+	name2.innerText = player2.name + " => O";
 	div2.className = "col-3";
 	div2.id = "p2";
 	div2.appendChild(name2);
@@ -287,19 +289,43 @@ function pushHistory() {
 }
 function save() {
 	localStorage.savedGame = JSON.stringify(list);
+	localStorage.player1 = JSON.stringify(player1);
+	localStorage.player2 = JSON.stringify(player2);
+	localStorage.turn = Turn;
+
+	console.log(player1);
+	console.log(Turn);
+	console.log(localStorage.player1.name);
 	alert("The Game Saved");
 }
 function load() {
 	if (localStorage.savedGame) {
+		let p1 = document.getElementById("p1");
+		let p2 = document.getElementById("p2");
+
 		list = JSON.parse(localStorage.savedGame);
+
+		player1 = JSON.parse(localStorage.player1);
+		player2 = JSON.parse(localStorage.player2);
+
+		p1.innerText = player1.name + " => X";
+		p2.innerText = player2.name + " => O";
+
+		Turn = localStorage.turn;
+		changeTurn();
 		eraseBoard();
 		flagErase = true;
 		createBoard();
 	}
 }
-async function undo() {
+function undo() {
+	debugger;
 	if (gameHistory.length > 0) {
 		let lastStep = gameHistory.pop();
+		if (flagUndo) {
+			flagUndo = false;
+			lastStep = gameHistory.pop();
+		}
 		list = JSON.parse(lastStep);
 		eraseBoard();
 		flagErase = true;
@@ -341,8 +367,12 @@ function changeTurn() {
 function signBoard(col) {
 	if (list[i][j] == "X") {
 		col.innerText = "X";
+		col.style.backgroundImage = "url('./x.jpg' )";
+		col.className = "col-2 cel x ";
 	} else if (list[i][j] == "O") {
 		col.innerText = "O";
+		col.style.backgroundImage = "url('./o.jpg' )";
+		col.className = "col-2 cel x ";
 	}
 }
 function saveBestScore(player) {
@@ -362,7 +392,7 @@ function saveBestScore(player) {
 }
 function showBestScore() {
 	let name = `bestScore${boardSize}`;
-	console.log(localStorage[name]);
+	Swal.fire("best result " + localStorage[name]);
 }
 
 startGame();
