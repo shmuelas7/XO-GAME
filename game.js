@@ -160,7 +160,7 @@ function putName() {
 	div1.id = "p1";
 	div1.appendChild(name1);
 
-	name2.innerText = player2.name + " => O";
+	name2.innerText = player2.name + " =>  O";
 	div2.className = "col-3";
 	div2.id = "p2";
 	div2.appendChild(name2);
