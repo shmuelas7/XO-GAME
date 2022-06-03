@@ -1,10 +1,17 @@
 .cel{
     border:black solid 3px
 }
-/* .col-2{
-
-    width:auto;
-} */
+.col-2{
+min-height: 100px;
+  min-width:100px;
+  height: auto;
+  width: auto;
+}
 #board{
     text-align: center;
+    
+}
+body{
+  display: grid;
+  justify-content: center;
 }
