@@ -341,7 +341,7 @@ function undo() {
 }
 async function winerr() {
 	clearInterval(intervalId);
-	let winName = Turn == "X" ? player2 : player1;
+	let winName = Turn == "X" ? player1 : player2;
 
 	await Swal.fire({
 		title: winName.name + " WINER !!! ",
