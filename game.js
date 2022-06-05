@@ -153,16 +153,18 @@ function putName() {
 	blank.className = "col-3 ";
 
 	name1.className = "text-center";
+	name1.id = "p1";
 	name2.className = "text-center";
 
-	name1.innerText = player1.name + " => X";
+	name1.innerText = player1.name + " =>  X";
 	div1.className = "col-3 bg-dark rounded-pill";
-	div1.id = "p1";
+	div1.id = "n1";
 	div1.appendChild(name1);
 
 	name2.innerText = player2.name + " =>  O";
 	div2.className = "col-3";
-	div2.id = "p2";
+	div2.id = "n2";
+	name2.id = "p2";
 	div2.appendChild(name2);
 
 	timer.className = "text-center col-3";
@@ -292,6 +294,8 @@ function save() {
 	localStorage.player1 = JSON.stringify(player1);
 	localStorage.player2 = JSON.stringify(player2);
 	localStorage.turn = Turn;
+	localStorage.history = JSON.stringify(gameHistory);
+	console.log(localStorage.history);
 
 	console.log(player1);
 	console.log(Turn);
@@ -307,9 +311,11 @@ function load() {
 
 		player1 = JSON.parse(localStorage.player1);
 		player2 = JSON.parse(localStorage.player2);
+		gameHistory = JSON.parse(localStorage.history);
 
 		p1.innerText = player1.name + " => X";
 		p2.innerText = player2.name + " => O";
+		p1.className = "text-center";
 
 		Turn = localStorage.turn;
 		changeTurn();
@@ -319,7 +325,6 @@ function load() {
 	}
 }
 function undo() {
-	debugger;
 	if (gameHistory.length > 0) {
 		let lastStep = gameHistory.pop();
 		if (flagUndo) {
@@ -350,16 +355,16 @@ async function winerr() {
 	saveBestScore(winName);
 }
 function changeTurn() {
-	let player1 = document.getElementById("p1");
-	let player2 = document.getElementById("p2");
+	let player1 = document.getElementById("n1");
+	let player2 = document.getElementById("n2");
 	if (Turn == "X") {
 		Turn = "O";
-		player2.className = "bg-black col-3 rounded-pill";
+		player2.className = "bg-dark col-3 rounded-pill";
 		player1.className = "col-3";
 		return player1;
 	} else {
 		Turn = "X";
-		player1.className = "bg-black col-3 rounded-pill";
+		player1.className = "bg-dark col-3 rounded-pill";
 		player2.className = "col-3 ";
 		return player2;
 	}
