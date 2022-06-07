@@ -7,7 +7,7 @@ let Turn = "X";
 let win = false;
 let list = [];
 let winer = null;
-let lis = ["", "", ""];
+let lis = [];
 let listSlantR = [];
 let listSlantL = ["", "", ""];
 let flagErase = false;
@@ -17,8 +17,10 @@ let flagUndo = null;
 function createMarix() {
 	for (let i = 0; i < boardSize; i++) {
 		list[i] = [];
+		lis[i] = [];
 		for (let j = 0; j < boardSize; j++) {
 			list[i][j] = " ";
+			lis[i][j] = " ";
 		}
 	}
 }
@@ -92,8 +94,8 @@ function checkList(check) {
 		chec(list[i], check);
 
 		for (let j = 0; j < boardSize; j++) {
-			lis[j] = list[j][i];
-			chec(lis, check);
+			lis[i][j] = list[j][i];
+			chec(lis[i], check);
 
 			if (i == j) {
 				listSlantR[i] = list[i][j];
