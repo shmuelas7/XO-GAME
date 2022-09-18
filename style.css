@@ -1,54 +1,120 @@
+@font-face {
+  font-family: myFirstFont;
+  src: url("./Neoneon.otf");
+}
+
 body {
   margin: 0;
-  background-color: orange;
-  color: #fff;
-  font-family: sans-serif;
-  -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
-  text-size-adjust: 100%;
+  background-image: url(./backround.png);
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+
+
 }
-.cel{
-  border:black solid 3px;
-  
+
+.cel {
+
+
+  width: 100px;
   height: 100px;
   cursor: pointer;
+  background-color: #1d263738;
 }
 
 
 #seconds {
-  font-size: 2em;}
+  font-size: 20px;
+}
 
 #minutes {
-  font-size: 2em;
-}
-#colon {
-  font-size: 2em;
+  font-size: 20px;
 }
 
-.size{
+#colon {
+  font-size: 20px;
+}
+
+.size {
   width: 100%;
 
 }
-/* .mark{
-  font-size: 15px;
-} */
 
-.txt{
-    font-size:small ;
+.you {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white
 }
-@media only screen and (max-width: 600px) {
-  .size5 {
-    margin-left: 12%;
-  }
-  .size4{
-    margin-left: 20%;
-  }
-  .size3{
-    margin-left: 30%;
-  }
+
+.celX {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 30px;
+}
+
+.timerContainer {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  border-bottom: white solid 1px;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
 
 }
-.x{
+
+.timer {
+  display: flex;
+  flex-direction: row;
+  color: white;
+}
+
+.timerName {
+  color: white;
+  font-size: 20px;
+}
+
+.turnContainer {
+  border-bottom: white solid 1px;
+  width: 100%
+}
+
+.turn {
+  color: white;
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.counter {
+  color: white;
+  font-size: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.moves {
+  color: white;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+
+.x {
   background-repeat: no-repeat;
   background-size: 100% 100%;
   font-size: 1px;
@@ -60,12 +126,98 @@ body {
 
 
 .game {
+  border-radius: 25px;
+  border: white solid 3px;
+  margin-right: 7%;
 
-
-  width: 600px;
-  height: 600px;
-  -webkit-user-select: none;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
 }
 
+.bodyGame {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  align-self: center;
+  justify-content: center;
+
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: myFirstFont;
+  color: white;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#header {
+  display: flex;
+  align-self: center;
+  border: white solid 2px;
+  border-radius: 25px;
+  flex-direction: column;
+  margin-right: 10%;
+  justify-content: center;
+  align-items: center;
+
+}
+
+#nav {
+  display: flex;
+}
+
+.gameContainer {
+  display: flex;
+  flex-direction: row-reverse
+}
+
+.topBorder {
+
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  background-color: #1d263738;
+}
+
+.buttomBorder {
+  border-left: white solid 1px;
+  border-bottom: white solid 1px;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  background-color: #1d263738;
+}
+
+.dBorder {
+  border-bottom: white solid 1px;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  background-color: #1d263738;
+
+}
+
+.leftDowneBorder {
+  border-left: white solid 1px;
+  width: 100px;
+  height: 100px;
+  cursor: pointer;
+  background-color: #1d263738;
+}
+
+.btn {
+  background-color: #4f455f68;
+  width: 50px;
+  display: flex;
+  justify-content: space-around;
+  margin-left: 2%;
+  margin-top: 20px;
+}
+
+.l {
+  margin-right: 20px;
+}

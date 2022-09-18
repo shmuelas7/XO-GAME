@@ -1,5 +1,8 @@
 let boardSize = 3;
 const board = document.getElementById("board");
+const count = document.getElementsByClassName("counter");
+const turn = document.getElementsByClassName("turn");
+
 let player1 = null;
 let player2 = null;
 let gameHistory = [];
@@ -13,6 +16,7 @@ let listSlantL = ["", "", ""];
 let flagErase = false;
 let intervalId = null;
 let flagUndo = null;
+let counter =0;
 
 function createMarix() {
 	for (let i = 0; i < boardSize; i++) {
@@ -38,13 +42,20 @@ function eraseBoard() {
 function createBoard() {
 	for (i = 0; i < boardSize; i++) {
 		let div = document.createElement("div");
-		div.className = "row";
+		div.className = "bodyGame ";
 
 		for (j = 0; j < boardSize; j++) {
 			let col = document.createElement("div");
-			col.className = "col-2 cel";
-			col.style.backgroundColor = "red";
-
+			if(i<boardSize-1 && j!==0){
+				col.className = "buttomBorder";
+			}else if(j==0 && i!==boardSize-1){
+				col.className = "dBorder";
+			}
+			else if(i==boardSize-1 && j!==0){
+				col.className = "leftDowneBorder";
+			}else{
+			col.className = "cel";
+			}
 			if (eraseBoard) {
 				signBoard(col);
 			}
@@ -52,23 +63,23 @@ function createBoard() {
 			col.id = JSON.stringify({ i, j });
 			col.onclick = (e) => {
 				if (e.target.innerHTML != "X" && e.target.innerHTML != "O" && !win) {
-					// console.log(countX);
-					// console.log(countY);
+					counter ++;
+					count[0].innerHTML=counter
+					turn[0].innerHTML=Turn=="X"?"O":"X"
 					const { i, j } = JSON.parse(e.target.id);
 					flagUndo = true;
 
+
 					if (Turn == "X") {
 						player1.count++;
-						e.target.className = "col-2 cel x ";
 						e.target.innerText = "X";
-						e.target.style.backgroundImage = "url('./x.jpg' )";
+						e.target.className += " celX"
 						list[i][j] = "X";
 						checkList("X");
 					} else {
 						player2.count++;
 						e.target.innerText = "O";
-						e.target.style.backgroundImage = "url('./o.jpg' )";
-						e.target.className = "col-2 cel  x text-black";
+						e.target.className += " celX"
 						list[i][j] = "O";
 						checkList("O");
 					}
@@ -119,19 +130,14 @@ async function startGame() {
 	await Swal.fire({
 		title: "Enter Names",
 		html:
-			'<input id="name1" class="swal2-input" placeholder="First Name">' +
-			'<input id="name2" class="swal2-input" placeholder="Secend Name">' +
-			"<br/>" +
 			" <labal> Select a board size  </label>" +
 			"<br/>" +
 			'<input type="range" id="range" max="5" min="3" value="3" onchange="updateSize()">' +
 			"<label  id='size'>  3<label/>",
 		focusConfirm: false,
 		preConfirm: () => {
-			let a = document.getElementById("name1").value;
-			let b = document.getElementById("name2").value;
-			player1 = new CreatePlayer(a);
-			player2 = new CreatePlayer(b);
+			player1 = new CreatePlayer("X");
+			player2 = new CreatePlayer("O");
 		},
 	});
 
@@ -143,41 +149,43 @@ async function startGame() {
 
 function putName() {
 	let header = document.getElementById("header");
-	let blank = document.createElement("div");
-	let div1 = document.createElement("div");
-	let div2 = document.createElement("div");
+	let divTurn = document.createElement("div");
+	let turn = document.createElement("h4");
+	let you = document.createElement("h5");
+	let divCounter = document.createElement("div");
+	let textCounter =document.createElement("h4");
+
+
+	textCounter.innerHTML="moves"
+	textCounter.className="moves"
+	let count = document.createElement("h5");
+	count.innerText= counter
+	count.className="counter"
+	you.innerHTML="you"
+	you.className="you"
+	turn.innerHTML=Turn;
+	turn.className="turn"
+	divTurn.className="turnContainer"
+
+	divCounter.append(textCounter,count)
+
+	divTurn.append(you,turn)
+
+	
 	let timer = createTimer();
-	let name1 = document.createElement("h3");
-	let name2 = document.createElement("h3");
-	let label1 = document.createElement("label");
-	let label2 = document.createElement("label");
-
-	blank.className = "col-3 ";
-
-	name1.className = "text-center";
-	name1.id = "p1";
-	name2.className = "text-center";
-
-	name1.innerText = player1.name + " =>  X";
-	div1.className = "col-3 bg-dark rounded-pill";
-	div1.id = "n1";
-	div1.appendChild(name1);
-
-	name2.innerText = player2.name + " =>  O";
-	div2.className = "col-3";
-	div2.id = "n2";
-	name2.id = "p2";
-	div2.appendChild(name2);
-
-	timer.className = "text-center col-3";
-
-	header.append(timer, div1, div2, blank);
+	header.append(timer,divTurn,divCounter);
 	startTimer();
 }
 
 function createTimer() {
+	let container = document.createElement("div");
+	let name = document.createElement("div");
 	let div = document.createElement("div");
-	div.className = "col-3";
+	div.className = "timer";
+	container.className="timerContainer"
+
+	name.innerText="timer"
+	name.className="timerName"
 
 	let minutes = document.createElement("label");
 	minutes.id = "minutes";
@@ -192,7 +200,9 @@ function createTimer() {
 	seconds.innerHTML = "00";
 
 	div.append(minutes, colon, seconds);
-	return div;
+	container.append(name,div)
+
+	return container;
 }
 function startTimer() {
 	let minutesLabel = document.getElementById("minutes");
@@ -216,76 +226,52 @@ function updateSize() {
 	let range = document.getElementById("range");
 	let count = document.getElementById("size");
 	let center = document.getElementById("center");
-	let centerDiv = document.getElementById("centerDiv");
+	
 
 	boardSize = range.value;
-	board.className = `size${boardSize} col-4 text-center game `;
+	board.className = `size${boardSize} text-center game `;
 	count.innerHTML = boardSize;
-	if (boardSize > 3) {
-		center.className = "col-4";
-		centerDiv.className = "col-4";
-	}
+
 }
 function createNav() {
 	let size = 2;
 	let nav = document.getElementById("nav");
-
-	let undoDiv = document.createElement("div");
 	let undoImg = document.createElement("button");
-
-	let reloadDiv = document.createElement("div");
 	let reloadBtn = document.createElement("button");
-
-	let saveDiv = document.createElement("div");
 	let saveImg = document.createElement("button");
-
-	let newGameDiv = document.createElement("div");
 	let newGamebtn = document.createElement("button");
-
-	let bestScorediv = document.createElement("div");
 	let bestScorebtn = document.createElement("button");
 
-	bestScorediv.className = `col-lg-${size} txt col-sm-12 mt-2 `;
-	bestScorebtn.className = " size btn btn-primary";
+	bestScorebtn.className = "btn l";
 	bestScorebtn.innerText = "best score";
 	bestScorebtn.onclick = () => {
 		showBestScore();
 	};
-	bestScorediv.appendChild(bestScorebtn);
-
-	newGameDiv.className = `col-lg-${size} txt col-sm-12 mt-2 `;
-	newGamebtn.className = " size btn btn-primary";
+	newGamebtn.className = "btn";
 	newGamebtn.innerHTML = "new Game";
 	newGamebtn.onclick = () => {
 		newGame();
 	};
-	newGameDiv.appendChild(newGamebtn);
 
-	undoDiv.className = `col-lg-${size} txt col-sm-12 mt-2`;
-	undoImg.className = "size btn btn-primary";
+	undoImg.className = "btn";
 	undoImg.innerText = "step back";
-	undoDiv.appendChild(undoImg);
 	undoImg.onclick = () => {
 		undo();
 	};
 
-	saveDiv.className = `col-lg-${size} txt col-sm-12 mt-2 `;
 	saveImg.innerText = "save game";
-	saveImg.className = "size btn btn-primary";
+	saveImg.className = "btn";
 	saveImg.onclick = () => {
 		save();
 	};
-	saveDiv.appendChild(saveImg);
 
-	reloadDiv.className = `col-lg-${size} txt  col-sm-12 mt-2 `;
 	reloadBtn.innerText = "reload game";
-	reloadBtn.className = "btn btn-primary size";
+	reloadBtn.className = "btn";
 	reloadBtn.onclick = () => {
 		load();
 	};
-	reloadDiv.appendChild(reloadBtn);
-
-	nav.append(undoDiv, saveDiv, reloadDiv, newGameDiv, bestScorediv);
+	
+	nav.append(undoImg, saveImg, reloadBtn, newGamebtn, bestScorebtn);
 }
 
 function pushHistory() {
@@ -357,29 +343,22 @@ async function winerr() {
 	saveBestScore(winName);
 }
 function changeTurn() {
-	let player1 = document.getElementById("n1");
-	let player2 = document.getElementById("n2");
+	
 	if (Turn == "X") {
 		Turn = "O";
-		player2.className = "bg-dark col-3 rounded-pill";
-		player1.className = "col-3";
 		return player1;
 	} else {
 		Turn = "X";
-		player1.className = "bg-dark col-3 rounded-pill";
-		player2.className = "col-3 ";
 		return player2;
 	}
 }
 function signBoard(col) {
 	if (list[i][j] == "X") {
 		col.innerText = "X";
-		col.style.backgroundImage = "url('./x.jpg' )";
-		col.className = "col-2 cel x ";
+		col.className = " celX ";
 	} else if (list[i][j] == "O") {
 		col.innerText = "O";
-		col.style.backgroundImage = "url('./o.jpg' )";
-		col.className = "col-2 cel x ";
+		col.className = " celX ";
 	}
 }
 function saveBestScore(player) {
