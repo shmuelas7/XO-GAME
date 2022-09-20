@@ -46,19 +46,19 @@ function createBoard() {
 
 		for (j = 0; j < boardSize; j++) {
 			let col = document.createElement("div");
+			signBoard(col);
 			if(i<boardSize-1 && j!==0){
-				col.className = "buttomBorder";
+				col.className += " buttomBorder";
 			}else if(j==0 && i!==boardSize-1){
-				col.className = "dBorder";
+				col.className += " dBorder";
 			}
 			else if(i==boardSize-1 && j!==0){
-				col.className = "leftDowneBorder";
+				col.className += " leftDowneBorder";
 			}else{
-			col.className = "cel";
+			col.className +=" cel";
 			}
-			if (eraseBoard) {
-				signBoard(col);
-			}
+				
+		
 
 			col.id = JSON.stringify({ i, j });
 			col.onclick = (e) => {
@@ -242,7 +242,7 @@ function createNav() {
 	let newGamebtn = document.createElement("button");
 	let bestScorebtn = document.createElement("button");
 
-	bestScorebtn.className = "btn l";
+	bestScorebtn.className = "btn";
 	bestScorebtn.innerText = "best score";
 	bestScorebtn.onclick = () => {
 		showBestScore();
@@ -283,36 +283,27 @@ function save() {
 	localStorage.player2 = JSON.stringify(player2);
 	localStorage.turn = Turn;
 	localStorage.history = JSON.stringify(gameHistory);
-	console.log(localStorage.history);
-
-	console.log(player1);
-	console.log(Turn);
-	console.log(localStorage.player1.name);
 	alert("The Game Saved");
 }
 function load() {
 	if (localStorage.savedGame) {
-		let p1 = document.getElementById("p1");
-		let p2 = document.getElementById("p2");
-
 		list = JSON.parse(localStorage.savedGame);
 
 		player1 = JSON.parse(localStorage.player1);
 		player2 = JSON.parse(localStorage.player2);
 		gameHistory = JSON.parse(localStorage.history);
-
-		p1.innerText = player1.name + " => X";
-		p2.innerText = player2.name + " => O";
-		p1.className = "text-center";
-
 		Turn = localStorage.turn;
-		changeTurn();
+		win=false
+		console.log(Turn)
+		console.log(turn[0])
+		turn[0].innerHTML= Turn
 		eraseBoard();
 		flagErase = true;
 		createBoard();
 	}
 }
 function undo() {
+	win=false
 	if (gameHistory.length > 0) {
 		let lastStep = gameHistory.pop();
 		if (flagUndo) {
@@ -320,19 +311,19 @@ function undo() {
 			lastStep = gameHistory.pop();
 		}
 		list = JSON.parse(lastStep);
+		changeTurn()
+		turn[0].innerHTML= Turn
 		eraseBoard();
 		flagErase = true;
 		createBoard();
-		let player = changeTurn();
-		player.count--;
+		
 	}
 }
 async function winerr() {
 	clearInterval(intervalId);
-	let winName = Turn == "X" ? player1 : player2;
-
+	let winName = Turn == "X" ?"Player X Win": "Player O Win";
 	await Swal.fire({
-		title: winName.name + " WINER !!! ",
+		title: Turn,
 		showClass: {
 			popup: "animate__animated animate__fadeInDown",
 		},
@@ -346,19 +337,16 @@ function changeTurn() {
 	
 	if (Turn == "X") {
 		Turn = "O";
-		return player1;
-	} else {
+	}else{
 		Turn = "X";
-		return player2;
 	}
 }
 function signBoard(col) {
+	col.className +=" celX"
 	if (list[i][j] == "X") {
 		col.innerText = "X";
-		col.className = " celX ";
 	} else if (list[i][j] == "O") {
 		col.innerText = "O";
-		col.className = " celX ";
 	}
 }
 function saveBestScore(player) {

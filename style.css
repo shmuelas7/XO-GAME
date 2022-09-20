@@ -128,7 +128,7 @@ body {
 .game {
   border-radius: 25px;
   border: white solid 3px;
-  margin-right: 7%;
+  margin-right: 9%;
 
 }
 
@@ -168,6 +168,8 @@ body {
 
 #nav {
   display: flex;
+  justify-content: space-between;
+  width: 300px;
 }
 
 .gameContainer {
@@ -210,14 +212,10 @@ body {
 }
 
 .btn {
-  background-color: #4f455f68;
+  background-color: rgba(0, 0, 0, 0.484);
+  color: white;
   width: 50px;
-  display: flex;
-  justify-content: space-around;
-  margin-left: 2%;
+  border-radius: 10px;
+  font-size: 10px;
   margin-top: 20px;
-}
-
-.l {
-  margin-right: 20px;
 }
