@@ -3,8 +3,6 @@ const board = document.getElementById("board");
 const count = document.getElementsByClassName("counter");
 const turn = document.getElementsByClassName("turn");
 
-let player1 = null;
-let player2 = null;
 let gameHistory = [];
 let Turn = "X";
 let win = false;
@@ -33,10 +31,12 @@ function newGame() {
 	document.location.reload(true);
 }
 function eraseBoard() {
+	counter =0
 	let element = document.getElementById("board");
 	while (element.firstChild) {
 		element.removeChild(element.firstChild);
 	}
+	
 }
 
 function createBoard() {
@@ -71,13 +71,11 @@ function createBoard() {
 
 
 					if (Turn == "X") {
-						player1.count++;
 						e.target.innerText = "X";
 						e.target.className += " celX"
 						list[i][j] = "X";
 						checkList("X");
 					} else {
-						player2.count++;
 						e.target.innerText = "O";
 						e.target.className += " celX"
 						list[i][j] = "O";
@@ -127,20 +125,6 @@ function CreatePlayer(name, count = 1) {
 }
 
 async function startGame() {
-	await Swal.fire({
-		title: "Enter Names",
-		html:
-			" <labal> Select a board size  </label>" +
-			"<br/>" +
-			'<input type="range" id="range" max="5" min="3" value="3" onchange="updateSize()">' +
-			"<label  id='size'>  3<label/>",
-		focusConfirm: false,
-		preConfirm: () => {
-			player1 = new CreatePlayer("X");
-			player2 = new CreatePlayer("O");
-		},
-	});
-
 	putName();
 	createMarix();
 	createNav();
@@ -226,11 +210,14 @@ function updateSize() {
 	let range = document.getElementById("range");
 	let count = document.getElementById("size");
 	let center = document.getElementById("center");
-	
+	console.log(count)
 
 	boardSize = range.value;
-	board.className = `size${boardSize} text-center game `;
 	count.innerHTML = boardSize;
+	win=false
+	eraseBoard()
+	createMarix()
+	createBoard()
 
 }
 function createNav() {
@@ -310,6 +297,7 @@ function undo() {
 			flagUndo = false;
 			lastStep = gameHistory.pop();
 		}
+		counter --
 		list = JSON.parse(lastStep);
 		changeTurn()
 		turn[0].innerHTML= Turn
@@ -323,7 +311,7 @@ async function winerr() {
 	clearInterval(intervalId);
 	let winName = Turn == "X" ?"Player X Win": "Player O Win";
 	await Swal.fire({
-		title: Turn,
+		title: winName,
 		showClass: {
 			popup: "animate__animated animate__fadeInDown",
 		},
@@ -331,7 +319,7 @@ async function winerr() {
 			popup: "animate__animated animate__fadeOutUp",
 		},
 	});
-	saveBestScore(winName);
+	saveBestScore(counter);
 }
 function changeTurn() {
 	
@@ -343,30 +331,26 @@ function changeTurn() {
 }
 function signBoard(col) {
 	col.className +=" celX"
+	console.log(list)
 	if (list[i][j] == "X") {
 		col.innerText = "X";
 	} else if (list[i][j] == "O") {
 		col.innerText = "O";
 	}
 }
-function saveBestScore(player) {
+function saveBestScore(counter) {
 	let name = `bestScore${boardSize}`;
 
-	console.log(localStorage[name]);
-	if (localStorage[name] === undefined) {
-		localStorage[name] = player.count;
-		console.log(localStorage[name]);
+	if (localStorage.count === undefined) {
+		localStorage.count = counter
 	} else {
-		console.log(localStorage[name] + "" + player.count);
-		if (player.count < localStorage[name]) {
-			localStorage[name] = player.count;
+		if (counter < localStorage.count) {
+			localStorage.count = counter;
 			console.log("sucss");
 		}
 	}
 }
 function showBestScore() {
-	let name = `bestScore${boardSize}`;
-	Swal.fire("best result " + localStorage[name]);
+	Swal.fire("best result " + localStorage.count);
 }
-
 startGame();

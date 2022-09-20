@@ -19,7 +19,12 @@
 		<header>
 			<h1 class="header">Tic Tac Toe Game</h1>
 		</header>		
-            
+            <div>
+				<labal style="color:white"> Select a board size  </label>
+					<br/>
+					<input type="range" id="range" max="5" min="3" value="3" onchange="updateSize()">
+					<label  id='size' style="color:white">  3<label/>
+			</div>
      
 	<div class="gameContainer">
       <div id="board" class="game"></div>
