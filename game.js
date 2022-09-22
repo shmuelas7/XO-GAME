@@ -15,6 +15,7 @@ let flagErase = false;
 let intervalId = null;
 let flagUndo = null;
 let counter =0;
+let totalSeconds = 0;
 
 function createMarix() {
 	for (let i = 0; i < boardSize; i++) {
@@ -36,6 +37,7 @@ function eraseBoard() {
 	while (element.firstChild) {
 		element.removeChild(element.firstChild);
 	}
+	totalSeconds = 0;
 	
 }
 
@@ -114,9 +116,14 @@ function checkList(check) {
 				listSlantL[i] = list[i][j];
 			}
 		}
+		
 	}
 	chec(listSlantR, check);
 	chec(listSlantL, check);
+	if (counter ===boardSize*boardSize && !win){
+		alert("GAME OVER NO WINNER")
+		return
+	}
 }
 
 function CreatePlayer(name, count = 1) {
@@ -191,7 +198,6 @@ function createTimer() {
 function startTimer() {
 	let minutesLabel = document.getElementById("minutes");
 	let secondsLabel = document.getElementById("seconds");
-	let totalSeconds = 0;
 	intervalId = setInterval(setTime, 1000);
 
 	function setTime() {
